@@ -10,6 +10,10 @@ app.config(['$routeProvider', function($routeProvider) {
             templateUrl: 'messages.html',
             controller: 'MessageCtrl'
         })
+        .when('/tweets', {
+            templateUrl: 'tweets.html',
+            controller: 'TweetCtrl'
+        })
 }]);
 
 
