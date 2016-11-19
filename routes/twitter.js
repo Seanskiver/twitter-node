@@ -43,8 +43,8 @@ app.get(
   
 });
 
-app.get('/twitter/tweet', function(req, res) {
-  twitter.makeTweet(function(error, data) {
+app.post('/twitter/tweet/:tweet', function(req, res) {
+  twitter.makeTweet(req.session.user.token, req.session.user.tokenSecret, req.params.tweet, function(error, data) {
     if(error) {
       console.log(require('sys').inspect(error));
       res.end('Something went wrong');
@@ -79,5 +79,29 @@ app.get('/twitter/inbox', function(req, res) {
     }
   })
 });
+
+app.get('/twitter/getTweets', function(req, res) {
+  twitter.getTweets(req.session.user.token, req.session.user.tokenSecret, function(error, data) {
+    if (error) {
+      console.log(require('sys').inspect(error));
+      res.end('There was an error getting your tweets');
+    } else {
+      var tweets = JSON.parse(data)
+      , noFavs = []
+      ;
+
+      for (var i = 0; i < tweets.length; i++) {
+        if (tweets[i].retweeted == false && tweets[i].retweet_count == 0 && tweets[i].favorite_count == 0) {
+          noFavs.push(tweets[i]);
+        }
+      }
+      
+      
+      
+      console.log("--------------------------NO FAV TWEETS--------------------------")
+      console.log(require('sys').inspect(noFavs));
+    }
+  });
+})
 
 module.exports = app;

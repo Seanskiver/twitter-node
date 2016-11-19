@@ -71,12 +71,13 @@ module.exports.initTwitterOauth = function() {
   );
 }
 
-module.exports.makeTweet = function(token, tokenSecret, cb) {
+module.exports.makeTweet = function(token, tokenSecret, tweet, cb) {
+  console.log('Tweet body: ' + tweet);
   oa.post(
     "https://api.twitter.com/1.1/statuses/update.json",
     token, 
     tokenSecret,
-    {"status":"Posted from Node.js webapp OAuth"},
+    {"status": tweet},
     cb
   );    
 }
@@ -100,4 +101,9 @@ module.exports.getDms = function(token, tokenSecret, callback) {
       tokenSecret,
       callback
     );    
+}
+
+// MAKE ME COOL FUNCTIONS
+module.exports.getTweets = function(token, tokenSecret, callback) {
+  oa.get('https://api.twitter.com/1.1/statuses/user_timeline.json?count=50&trim_user=true&exclude_replies=true', token, tokenSecret, callback);
 }

@@ -1,0 +1,3 @@
+<ul>
+    <li ng-repeat="t in tweets | filter:{retweeted:false, retweet_count: 0, favorite_count: 0}">{{ t.text }}</li>
+</ul>

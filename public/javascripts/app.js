@@ -10,7 +10,11 @@ app.config(['$routeProvider', function($routeProvider) {
             templateUrl: 'messages.html',
             controller: 'MessageCtrl'
         })
-        .when('/tweets', {
+        .when('/tweet', {
+            templateUrl: 'tweet.html',
+            controller: 'TweetCtrl'
+        })
+        .when('/getTweets', {
             templateUrl: 'tweets.html',
             controller: 'TweetCtrl'
         })
@@ -19,15 +23,6 @@ app.config(['$routeProvider', function($routeProvider) {
 
 app.factory('AuthService', ['$resource', function($resource) {
   return $resource('/checkauth'); 
-}]);
-
-app.factory('MessageService', ['$resource', function($resource) {
-    return $resource('/twitter/inbox', {}, {
-        query: {
-            method: 'GET', 
-            isArray: false
-        }
-    });
 }]);
 
 app.controller('AuthCtrl', ['$scope', '$rootScope', 'AuthService', function($scope, $rootScope, auth) {
@@ -43,11 +38,51 @@ app.controller('AuthCtrl', ['$scope', '$rootScope', 'AuthService', function($sco
     });
 }]);
 
+
+app.factory('MessageService', ['$resource', function($resource) {
+    return $resource('/twitter/inbox', {}, {
+        query: {
+            method: 'GET', 
+            isArray: false
+        }
+    });
+}]);
+
 app.controller('MessageCtrl', ['$scope', 'MessageService', function($scope, message) {
     message.query(function(data, headers) {
         console.log(data);
         
         $scope.messages = JSON.parse(data.messages);
+    })
+}]);
+
+
+app.factory('TweetService', ['$resource', function($resource) {
+    return $resource('/twitter/tweet/:tweet', {}, {
+        tweet: {
+            method: 'POST'
+        },
+        
+    })
+}]);
+
+app.factory('GetTweetService', ['$resource', function($resource) {
+    return $resource('/twitter/getTweets', {}, {
+       query: {
+           method: 'GET'
+       } 
+    });
+}]);
+
+app.controller('TweetCtrl', ['$resource', '$scope', '$http', 'TweetService', 'GetTweetService', function($resource, $scope, $http, TweetService, GetTweetService) {
+    $scope.post = function() {
+        $http.post('twitter/tweet/ ' + $scope.tweet);
+    }
+    
+    GetTweetService.query(function(data, headers) {
+        console.log(JSON.parse(data.tweets));
+        
+        $scope.tweets = JSON.parse(data.tweets);
     })
 }]);
 

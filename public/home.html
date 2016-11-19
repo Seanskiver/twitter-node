@@ -1,10 +1,11 @@
 <div>
     <div ng-show="isLoggedin">
           Logged in as {{ username }}
-          <a href="#/messages">See messages</a>
+          <ul>
+              <li><a href="#/messages">See messages</a></li>
+              <li><a href="#/tweet">Make a tweet</a></li>
+          </ul>
     </div>
     
-    <div ng-hide="isLoggedin">
-        <a href="/authz/twitter">Authorize</a>
-    </div>
+    <a ng-hide="isLoggedin" href="/authz/twitter">Authorize</a>
 </div>
